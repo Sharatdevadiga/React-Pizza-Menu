@@ -65,36 +65,45 @@ function Header() {
     </header>
   );
 }
-function Pizza(props) {
-  console.log(props);
+
+function Menu() {
+  const pizzas = pizzaData;
   return (
-    <div className="pizza">
-      <img src={props.photoName} />
-      <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price}</span>
-      </div>
-    </div>
+    <main className="menu">
+      <h2>Our Menu</h2>
+      {pizzas.length > 0 ? (
+        <>
+          <p>
+            Authentic Italian cuisine. 6 creative dishes to choose from. All
+            from our store Oven, all organic, all delicious
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name}></Pizza>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We are still working on our menu now. Please come back later</p>
+      )}
+    </main>
   );
 }
 
-function Menu() {
+function Pizza({ pizzaObj }) {
+  console.log(pizzaObj);
+
+  // if (pizzaObj.soldOut) return null;
+
   return (
-    <main className="menu">
-      <Pizza
-        name="Pizza Spinaci"
-        ingredients="Tomato, mozarella, spinach, and ricotta cheese"
-        price={12}
-        photoName="pizzas/spinaci.jpg"
-      />
-      <Pizza
-        name="Focaccia"
-        ingredients="Bread with italian olive oil and rosemary"
-        price={6}
-        photoName="pizzas/focaccia.jpg"
-      />
-    </main>
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} />
+      <div>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
+      </div>
+    </li>
   );
 }
 
@@ -109,9 +118,26 @@ function Footer() {
   return (
     <>
       <footer className="footer">
-        {new Date().toLocaleTimeString()}: We are currently Open
+        {isOpen ? (
+          <Order closeHour={closeHour} openHour={openHour} />
+        ) : (
+          <p>
+            We welcome you between {openHour}:00 and {closeHour}:00{" "}
+          </p>
+        )}
       </footer>
     </>
+  );
+}
+function Order({ closeHour, openHour }) {
+  return (
+    <div className="order">
+      <p>
+        We're open from {openHour}:00 till {closeHour}:00. Come visit us or
+        order online.
+      </p>
+      <button className="btn">Order</button>
+    </div>
   );
 }
 
